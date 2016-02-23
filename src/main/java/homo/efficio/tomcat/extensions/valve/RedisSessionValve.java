@@ -11,7 +11,7 @@ import java.io.IOException;
 /**
  * Created by hanmomhanda on 16. 2. 23.
  */
-public class SessionValve extends ValveBase{
+public class RedisSessionValve extends ValveBase{
     @Override
     public void invoke(Request request, Response response) throws IOException, ServletException {
         HttpSession session = request.getSession();
