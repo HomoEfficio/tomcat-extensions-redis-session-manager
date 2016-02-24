@@ -272,12 +272,14 @@ public class RedisSessionManager extends ManagerBase implements Lifecycle {
 
         setState(LifecycleState.STARTING);
 
+        Context context = getContext();
+
         Boolean attachedToValve = false;
-        for (Valve valve : getContainer().getPipeline().getValves()) {
+        for (Valve valve : context.getPipeline().getValves()) {
             if (valve instanceof RedisSessionValve) {
                 this.handlerValve = (RedisSessionValve) valve;
                 this.handlerValve.setRedisSessionManager(this);
-                log.info("Attached to RedisSessionHandlerValve");
+                log.info("Attached to RedisSessionValve");
                 attachedToValve = true;
                 break;
             }
@@ -296,7 +298,7 @@ public class RedisSessionManager extends ManagerBase implements Lifecycle {
             throw new LifecycleException(e);
         }
 
-        log.info("Will expire sessions after " + getMaxInactiveInterval() + " seconds");
+        log.info("Will expire sessions after " + context.getSessionTimeout()*60 + " seconds");
 
         initializeDatabaseConnection();
 
