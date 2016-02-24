@@ -30,6 +30,8 @@ import redis.clients.jedis.*;
 import redis.clients.util.Pool;
 
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.*;
 
 public class RedisSessionManager extends ManagerBase implements Lifecycle {
@@ -272,10 +274,9 @@ public class RedisSessionManager extends ManagerBase implements Lifecycle {
 
         setState(LifecycleState.STARTING);
 
-        Context context = getContext();
-
         Boolean attachedToValve = false;
-        for (Valve valve : context.getPipeline().getValves()) {
+//        for (Valve valve : context.getPipeline().getValves()) {
+        for (Valve valve : getValves()) {
             if (valve instanceof RedisSessionValve) {
                 this.handlerValve = (RedisSessionValve) valve;
                 this.handlerValve.setRedisSessionManager(this);
@@ -298,13 +299,42 @@ public class RedisSessionManager extends ManagerBase implements Lifecycle {
             throw new LifecycleException(e);
         }
 
-        log.info("Will expire sessions after " + context.getSessionTimeout()*60 + " seconds");
+        log.info("Will expire sessions after " + getSessionTimeout() + " seconds");
 
         initializeDatabaseConnection();
 
         setDistributable(true);
     }
 
+    private Valve[] getValves() {
+
+        Valve[] valves = null;
+        Container container = getContainer2();
+        valves = container.getPipeline().getValves();
+
+        return valves;
+    }
+
+    private Container getContainer2() {
+        Class superManager = super.getClass();
+        Container container;
+        try {
+            Method getContext = superManager.getMethod("getContext");
+            container = (Context)getContext.invoke(this);
+        } catch (NoSuchMethodException e) {
+            log.debug("This Tomcat is below 8. Use getContainer() instead of getContext()");
+            container = getContainer();
+        } catch (InvocationTargetException e) {
+            throw new TomcatVersionException("getContext() can not be invoked on this", e);
+        } catch (IllegalAccessException e) {
+            throw new TomcatVersionException("getContext() can not be invoked on this", e);
+        }
+        return container;
+    }
+
+    private int getSessionTimeout() {
+        return -1;
+    }
 
     /**
      * Stop this component and implement the requirements
@@ -712,11 +742,7 @@ public class RedisSessionManager extends ManagerBase implements Lifecycle {
         log.info("Attempting to use serializer :" + serializationStrategyClass);
         serializer = (Serializer) Class.forName(serializationStrategyClass).newInstance();
 
-        Loader loader = null;
-
-        if (getContext() != null) {
-            loader = getContext().getLoader();
-        }
+        Loader loader = getLoader();
 
         ClassLoader classLoader = null;
 
@@ -726,6 +752,26 @@ public class RedisSessionManager extends ManagerBase implements Lifecycle {
         serializer.setClassLoader(classLoader);
     }
 
+    private Loader getLoader() {
+        Class classContainer = Container.class;
+        Container realContainer = getContainer2();
+        Loader loader = null;
+        try {
+            Method getLoader = classContainer.getMethod("getLoader");
+            loader = (Loader)getLoader.invoke(realContainer);
+        } catch (NoSuchMethodException e) {
+            log.debug("This Tomcat is 8 or higher. Use getLoader() of Context");
+            if (realContainer instanceof Context)
+                loader = ((Context)realContainer).getLoader();
+            else
+                throw new TomcatVersionException("container is not an instance of Context", e);
+        } catch (InvocationTargetException e) {
+            throw new TomcatVersionException("getLoader() can not be invoked on container", e);
+        } catch (IllegalAccessException e) {
+            throw new TomcatVersionException("getLoader() can not be invoked on container", e);
+        }
+        return loader;
+    }
 
     // Connection Pool Config Accessors
 
