@@ -3,7 +3,7 @@ version '0.1.0'
 
 apply plugin: 'java'
 
-sourceCompatibility = 1.8
+sourceCompatibility = 1.7
 
 repositories {
     mavenLocal()
@@ -15,3 +15,5 @@ dependencies {
 
     testCompile group: 'junit', name: 'junit', version: '4.11'
 }
+
+jar.baseName 'efficio-tomcat-extensions-session-manager'
