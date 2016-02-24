@@ -19,8 +19,8 @@ Redis server should be run before the Tomcat Web Application starts.
 Put the following files into the `CATALINA_BASE/lib` directory:
 
 - efficio-tomcat-extensions-redis-session-manager-VERSION.jar
-- jedis-2.8.0.jar
-- commons-pool2-2.4.2.jar
+- jedis-2.8.0.jar [https://github.com/xetorthio/jedis](https://github.com/xetorthio/jedis)
+- commons-pool2-2.4.2.jar [https://commons.apache.org/proper/commons-pool/](https://commons.apache.org/proper/commons-pool/)
 
 ### Configuration
 
