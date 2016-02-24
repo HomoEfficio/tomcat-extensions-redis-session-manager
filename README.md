@@ -1,20 +1,20 @@
-# Tomcat Extensions
+# Tomcat-Redis Session Manager
 
-Tomcat custom Listeners, Loaders, Managers, Valves, etc to save your precious time.
-
-## Tomcat-Redis Session Manager
-
-### Acknowledgement
+## Acknowledgement
 
 This extension is originated from [https://github.com/jcoleman/tomcat-redis-session-manager](https://github.com/jcoleman/tomcat-redis-session-manager).
 
 The original one does NOT support [Tomcat 8](https://github.com/jcoleman/tomcat-redis-session-manager#tomcat-8), so I fixed it a bit to support Tomcat 8.
 
-### Usage
+## Usage
 
 This extension needs **Java 7 or higher**.
 
-#### Dependencies
+### Pre-requisites
+
+Redis server should be run before the Tomcat Web Application starts.
+
+### Dependencies
 
 Put the following files into the `CATALINA_BASE/lib` directory:
 
@@ -22,7 +22,7 @@ Put the following files into the `CATALINA_BASE/lib` directory:
 - jedis-2.8.0.jar
 - commons-pool2-2.4.2.jar
 
-#### Configuration
+### Configuration
 
 Add the following inside the `<Context>` element of your `CATALINA_BASE/conf/context.xml`(NOT `server.xml`).
 ```xml
