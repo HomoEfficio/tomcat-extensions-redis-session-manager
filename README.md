@@ -2,7 +2,7 @@
 
 ## Acknowledgement
 
-This extension is originated from [https://github.com/jcoleman/tomcat-redis-session-manager](https://github.com/jcoleman/tomcat-redis-session-manager).
+This extension originated from [https://github.com/jcoleman/tomcat-redis-session-manager](https://github.com/jcoleman/tomcat-redis-session-manager).
 
 The original one does NOT support [Tomcat 8](https://github.com/jcoleman/tomcat-redis-session-manager#tomcat-8), so I fixed it a bit to support Tomcat 8.
 
