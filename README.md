@@ -8,7 +8,7 @@ The original one does NOT support [Tomcat 8](https://github.com/jcoleman/tomcat-
 
 ## Usage
 
-This extension needs **Java 7 or higher**.
+This extension needs **Java 7 or higher**, and it works well with Tomcat 8 as well as Tomcat 7.
 
 ### Pre-requisites
 
