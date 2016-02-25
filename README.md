@@ -16,7 +16,7 @@ Redis server should be run before the Tomcat Web Application starts.
 
 ### Dependencies
 
-Put the following files into the `CATALINA_BASE/lib` directory:
+Put the following files into the `CATALINA_HOME/lib` directory:
 
 - efficio-tomcat-extensions-redis-session-manager-VERSION.jar
 - jedis-2.8.0.jar [https://github.com/xetorthio/jedis](https://github.com/xetorthio/jedis)
@@ -24,7 +24,7 @@ Put the following files into the `CATALINA_BASE/lib` directory:
 
 ### Configuration
 
-Add the following inside the `<Context>` element of your `CATALINA_BASE/conf/context.xml`(NOT `server.xml`).
+Add the following inside the `<Context>` element of your `CATALINA_HOME/conf/context.xml`(NOT `server.xml`).
 ```xml
 <Valve className="homo.efficio.tomcat.extensions.session.redis.RedisSessionValve" />
 <Manager className="homo.efficio.tomcat.extensions.session.redis.RedisSessionManager"
